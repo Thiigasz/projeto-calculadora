@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Calculadora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
+            font-family:'Space Grotesk', sans-serif;;
             background-color: #1c2128; /*cor do fundo da tela*/
             display: flex; /*centraliza a calculadora*/
             flex-direction: column; /*empilha a tela acima dos botoes */
@@ -15,6 +19,7 @@
         }
 
         #display {
+            font-family:'JetBrains Mono', monospace; ;
             box-sizing: border-box; /*faz o padding caber dentro do width*/
             background-color: #edeae1; /*cor de fundo do display (tela)*/
             font-size: 40px; /*ajusta o tamanho do numero*/
@@ -50,6 +55,11 @@
         .eq {
             background-color: #6b9082;
             color: #f4f1ea;
+            grid-row: span 2;
+        }
+
+        .zero {
+            grid-column: span 2;
         }
 
         .ac {
@@ -60,31 +70,47 @@
         button:active {
             transform: scale(0.95); /*encolhe o botão pra 95% do tamanho, só durante o clique*/
         }
+
+        .calc {
+            background-color: #262c36; /*dando cor no cartão que sobrepoe a tela*/
+            padding: 18px; /*espaco interno, afastando o display/botões das bordas do cartão*/
+            border-radius: 22px; /*cantos bem arredondados*/
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35); /*sombra suave embaixo do cartão, dando profundidade*/
+        }
         
+        .tag {
+            color: #8a93a3;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
     </style>
 </head>
 <body>
-    <div id="display">0</div> <!-- telinha que mostra o número.usamos uma [div] com id display pra isso-->
-    <div id="botoes">
-         <button onclick="clearAll()" class="ac">AC</button>
-         <button onclick="toggleSign()">+/-</button>
-         <button onclick="deleteLast()">⌫</button>
-         <button onclick="chooseOp('/')" class="op">/</button>
-        <button onclick="appendNum('7')">7</button>
-        <button onclick="appendNum('8')">8</button>
-        <button onclick="appendNum('9')">9</button>
-        <button onclick="chooseOp('*')" class="op">*</button>
-        <button onclick="appendNum('4')">4</button>
-        <button onclick="appendNum('5')">5</button>
-        <button onclick="appendNum('6')">6</button>
-        <button onclick="chooseOp('-')" class="op">-</button>
-        <button onclick="appendNum('1')">1</button>
-        <button onclick="appendNum('2')">2</button>
-        <button onclick="appendNum('3')">3</button>
-        <button onclick="chooseOp('+')" class="op">+</button>
-        <button onclick="appendNum('0')">0</button>
-        <button onclick="appendNum('.')">.</button>
-        <button onclick="calculate() "class="eq">=</button>
+    <p class="tag">Projeto Calculadora</p>
+    <div class="calc">
+        <div id="display">0</div> <!-- telinha que mostra o número.usamos uma [div] com id display pra isso-->
+        <div id="botoes">
+             <button onclick="clearAll()" class="ac">AC</button>
+             <button onclick="toggleSign()">+/-</button>
+             <button onclick="deleteLast()">⌫</button>
+             <button onclick="chooseOp('/')" class="op">/</button>
+            <button onclick="appendNum('7')">7</button>
+            <button onclick="appendNum('8')">8</button>
+            <button onclick="appendNum('9')">9</button>
+            <button onclick="chooseOp('*')" class="op">*</button>
+            <button onclick="appendNum('4')">4</button>
+            <button onclick="appendNum('5')">5</button>
+            <button onclick="appendNum('6')">6</button>
+            <button onclick="chooseOp('-')" class="op">-</button>
+            <button onclick="appendNum('1')">1</button>
+            <button onclick="appendNum('2')">2</button>
+            <button onclick="appendNum('3')">3</button>
+            <button onclick="chooseOp('+')" class="op">+</button>
+            <button onclick="appendNum('0')" class="zero">0</button>
+            <button onclick="appendNum('.')">.</button>
+            <button onclick="calculate()" class="eq">=</button>
+        </div>
     </div>
     <!--acima usamos [button] para adicionar os botões nos quais utilizaremos para a calculadora. lembrando que a tag button é só o desenho. Para o botão fazer alguma coisa usamos o atributo [onclick] (que diz: quandoeu for clicado, rode essa funcão)-->
 
@@ -154,7 +180,7 @@
             /* a lógica: pega o texto de currentValue e remove o último caractere. em JS fazemos isso com .slice(0, -1)*/
 
             /*currentValue.length conta quantos caracteres tem o texto. é assim que verificamos se sobra mais de 1 digito ou não*/
-            function deletLast() {
+            function deleteLast() {
                 if (currentValue.length > 1) {
                     currentValue = currentValue.slice (0, -1);
                 } else {
