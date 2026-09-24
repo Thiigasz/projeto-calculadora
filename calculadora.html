@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Calculadora</title>
+    <style>
+        body {
+            background-color: #1c2128; /*cor do fundo da tela*/
+            display: flex; /*centraliza a calculadora*/
+            flex-direction: column; /*empilha a tela acima dos botoes */
+            justify-content: center; /*centraliza horizontalmente*/
+            align-items: center; /*centraliza verticalmente*/
+            height: 98vh; /*faz o body ocupar a altura inteira da tela (100% da viewport)*/
+        }
+
+        #display {
+            box-sizing: border-box; /*faz o padding caber dentro do width*/
+            background-color: #edeae1; /*cor de fundo do display (tela)*/
+            font-size: 40px; /*ajusta o tamanho do numero*/
+            text-align: right; /*alinha o texto a direita*/
+            padding: 20px; /*espaco interno (dentro da caixa)entre o texto e a borda da caixa (pra não ficar colado nas bordas)*/
+            border-radius: 12px; /*arredonda os cantos da caixa, pra deixar o visual mais suave e moderno*/
+            margin-bottom: 10px; /*espaco entre a tela e os botões quue vem logo abaixo*/
+            width: 264px;
+        }
+
+        #botoes {
+            display: grid; /*ativa o modo grade para os botoes*/
+            grid-template-columns: repeat(4,60px); /*cria 4 colunas, cada uma com 60px de largura. o repeat é um atalho pra não escrever o 60px 4 vezes*/
+            gap: 8px; /*cria um espacamento de 8px entre cada botão (tanto na horizontal quanto na vertical)*/
+        }
+
+        button {
+            background-color: #323b48; /*cor de fundo dos botões*/
+            color: #f4f1ea; /*cor do texto dentro dos bõtoes*/
+            font-size: 18px; /*tamanho do texto*/
+            border: none; /*remove a borda cinza padrão do navegador*/
+            border-radius: 10px; /*arredonda os cantos*/
+            cursor: pointer; /*faz o mouse virar uma "mãozinha" ao passar por cima, indicando que é clicável */
+            padding: 18px 0; /*espaco interno:18px em cima/embaixo, 0 nas laterais class="op"*/
+
+        }
+
+        .op {
+            background-color: #e8a33d;
+            color: #1c2128;
+        }
+
+        .eq {
+            background-color: #6b9082;
+            color: #f4f1ea;
+        }
+
+        .ac {
+            background-color: #c0392b;
+            color: #faf1ea;
+        }
+
+        button:active {
+            transform: scale(0.95); /*encolhe o botão pra 95% do tamanho, só durante o clique*/
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="display">0</div> <!-- telinha que mostra o número.usamos uma [div] com id display pra isso-->
+    <!-- Botões numéricos (0-9) + ponto decimal, todos chama appendNum() -->
+    <div id="botoes">
+        <button onclick="appendNum('0')">0</button>
+        <button onclick="appendNum('1')">1</button>
+        <button onclick="appendNum('2')">2</button>
+        <button onclick="appendNum('3')">3</button>
+        <button onclick="appendNum('4')">4</button>
+        <button onclick="appendNum('5')">5</button>
+        <button onclick="appendNum('6')">6</button>
+        <button onclick="appendNum('7')">7</button>
+        <button onclick="appendNum('8')">8</button>
+        <button onclick="appendNum('9')">9</button>
+        <!-- Botões de operacao matemática, chama de chooseOp() -->
+        <button onclick="chooseOp('/')" class="op">/</button>
+        <button onclick="chooseOp('*')" class="op">*</button>
+        <button onclick="chooseOp('-')" class="op">-</button>
+        <button onclick="chooseOp('+')" class="op">+</button>
+        <!-- Acões especiais: inverter sinal, calcular e limpar-->
+        <button onclick="toggleSign()">+/-</button>
+        <button onclick="calculate() "class="eq">=</button>
+        <button onclick="appendNum('.')">.</button>
+        <button onclick="clearAll()" class="ac">AC</button>
+    </div>
+    <!--acima usamos [button] para adicionar os botões nos quais utilizaremos para a calculadora. lembrando que a tag button é só o desenho. Para o botão fazer alguma coisa usamos o atributo [onclick] (que diz: quandoeu for clicado, rode essa funcão)-->
+
+    <!--Abaixo abrimos a tag script para escrevermos o codigo em JS dentro do HTML-->
+    <script> /* criamos três variáveis(a mémoria da calculadora) usando let para guardar 3 coisas na memoria enquanto funciona. a primeira: declara que o valor atual é '0' (ou seja que ainda não foi digitado valor na calculadora); a segunda: o numero anterior antes de escolher a operacão; e a terceira: qual operacão foi escolhida */
+        let currentValue = '0'; 
+        let previousValue = '';
+        let operator = null;
+
+        /* criamos abaixo a funcao appendNum que resulta em adicionar o numero que voce clicou ao que já está sendo digitado e verificamos com if se currentValue é '0' -> se for, substitui:currentValue = num;
+        se não for (else), concatena:currentValue += num;
+        no final (fora do if/else) atualizamos a tela*/
+
+        function appendNum (num) { /*usamos o === (sinal de três igual) pra comparar e não = (um sinal que é pra atribuir/guardar um valor)*/
+            if (currentValue === '0') {
+                currentValue = num; 
+               } else {
+                    currentValue += num;
+                }
+                document.getElementById('display').textContent = currentValue; /* para colocarmos o número novo na tela usamos o codigo acima (onde é feita a atualizacão da tela)
+                */
+            }
+            /*A funcao abaixo é criada para guardar o numero atual em previousValue e guardar o símbolo do operador escolhido na variavel operator, zerar o currentValue e digitar o proximo numero e atualizar a tela*/
+            function chooseOp (op) {
+                previousValue = currentValue;
+                operator = op;
+                currentValue = '0';
+                document.getElementById('display').textContent = currentValue; /*Atualiza a tela*/
+                
+            }
+            /* criamos a funcao abaixo para alternarmos os sinais(positivo e negativo). A lógica é: pega o número atual e multiplica por -1. Isso inverte o sinal: se for 5 vira -5*/
+            /*
+            parseFloat:usamos para converter texto em numero decimal;
+            .toString():usamos pra guardar de volta como texto (porque currentValue sempre guarda texto)
+            */
+            function toggleSign () {
+              currentValue = (parseFloat(currentValue)* -1).toString(); 
+              document.getElementById('display').textContent = currentValue; /*Atualiza a tela*/
+            }
+            /* aqui fazemos com que a calculadora ao digitar '=' pegue previousValue e currentValue e transforme em dois numeros de verdade com parseFloat;
+            Olhar qual dos operadores foi escolhido e fazer a conta certa;
+            Guardar o resultado em currentValue e atualizar a tela.*/
+            function calculate () {
+                let a = parseFloat(previousValue);
+                let b = parseFloat(currentValue);
+                let result;
+                /* usamos uma cadeia de if/ else if para calculadora "decidir" qual conta fazer, comparando o operator*/
+                if (operator === '+') {
+                    result = a + b;
+                }   else if (operator === '-') { 
+                    result = a - b;
+                }   else if (operator === '*') {
+                    result = a * b;
+                }   else if (operator === '/') {
+                    result = a / b;
+                } 
+                currentValue = result.toString(); /*essa linha pega o result(que é um número) e guarda ele dentro de currentValue(pra manter o padrão de sempre guardar como texto). Usa .toString() porque currentValue sempre precisa ser texto e result é um número*/
+                document.getElementById('display').textContent = currentValue; /*Atualiza a tela*/
+            }
+            /*aqui a lógica é voltar tudo para o estado inicial, exatamente quando a página carrega pela primeira vez (o botão de apagar/zerar a calculadora)*/
+            function clearAll (){
+                currentValue = '0';
+                previousValue = '';
+                operator = null;
+                document.getElementById('display').textContent = currentValue; /*atualiza a tela*/
+            }
+        
+    </script>
+
+</body>
+</html>
