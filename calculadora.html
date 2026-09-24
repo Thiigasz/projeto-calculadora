@@ -65,28 +65,26 @@
 </head>
 <body>
     <div id="display">0</div> <!-- telinha que mostra o número.usamos uma [div] com id display pra isso-->
-    <!-- Botões numéricos (0-9) + ponto decimal, todos chama appendNum() -->
     <div id="botoes">
-        <button onclick="appendNum('0')">0</button>
-        <button onclick="appendNum('1')">1</button>
-        <button onclick="appendNum('2')">2</button>
-        <button onclick="appendNum('3')">3</button>
-        <button onclick="appendNum('4')">4</button>
-        <button onclick="appendNum('5')">5</button>
-        <button onclick="appendNum('6')">6</button>
+         <button onclick="clearAll()" class="ac">AC</button>
+         <button onclick="toggleSign()">+/-</button>
+         <button onclick="deleteLast()">⌫</button>
+         <button onclick="chooseOp('/')" class="op">/</button>
         <button onclick="appendNum('7')">7</button>
         <button onclick="appendNum('8')">8</button>
         <button onclick="appendNum('9')">9</button>
-        <!-- Botões de operacao matemática, chama de chooseOp() -->
-        <button onclick="chooseOp('/')" class="op">/</button>
         <button onclick="chooseOp('*')" class="op">*</button>
+        <button onclick="appendNum('4')">4</button>
+        <button onclick="appendNum('5')">5</button>
+        <button onclick="appendNum('6')">6</button>
         <button onclick="chooseOp('-')" class="op">-</button>
+        <button onclick="appendNum('1')">1</button>
+        <button onclick="appendNum('2')">2</button>
+        <button onclick="appendNum('3')">3</button>
         <button onclick="chooseOp('+')" class="op">+</button>
-        <!-- Acões especiais: inverter sinal, calcular e limpar-->
-        <button onclick="toggleSign()">+/-</button>
-        <button onclick="calculate() "class="eq">=</button>
+        <button onclick="appendNum('0')">0</button>
         <button onclick="appendNum('.')">.</button>
-        <button onclick="clearAll()" class="ac">AC</button>
+        <button onclick="calculate() "class="eq">=</button>
     </div>
     <!--acima usamos [button] para adicionar os botões nos quais utilizaremos para a calculadora. lembrando que a tag button é só o desenho. Para o botão fazer alguma coisa usamos o atributo [onclick] (que diz: quandoeu for clicado, rode essa funcão)-->
 
@@ -151,6 +149,17 @@
                 currentValue = '0';
                 previousValue = '';
                 operator = null;
+                document.getElementById('display').textContent = currentValue; /*atualiza a tela*/
+            }
+            /* a lógica: pega o texto de currentValue e remove o último caractere. em JS fazemos isso com .slice(0, -1)*/
+
+            /*currentValue.length conta quantos caracteres tem o texto. é assim que verificamos se sobra mais de 1 digito ou não*/
+            function deletLast() {
+                if (currentValue.length > 1) {
+                    currentValue = currentValue.slice (0, -1);
+                } else {
+                    currentValue = '0';
+                }
                 document.getElementById('display').textContent = currentValue; /*atualiza a tela*/
             }
         
